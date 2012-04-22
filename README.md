@@ -1,4 +1,4 @@
-![JSON Syntax Highlight & Format](https://ssl.gstatic.com/s2/oz/images/google-logo-plus-0fbe8f0119f4a902429a5991af5db563.png)
+![JSON Syntax Highlight & Format](http://jsonsh.com/img/logo.png)
 
 JSON Syntax Highlight & Format
 ==
