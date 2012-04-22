@@ -101,8 +101,7 @@ h1 span
 {
 	position: absolute;
 	right: 20px;
-	top: 100px;
-	z-index: 100;
+	top: 90px;
 	color: #f05e07;
 	text-decoration: none;
 	display: none;
@@ -207,7 +206,7 @@ ol.linenums
 }
 li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
 {
-    color: #333;
+    color: #444;
     list-style-type: decimal;
 	line-height: 20px;
 	font-family: 'Anonymous Pro', sans-serif;

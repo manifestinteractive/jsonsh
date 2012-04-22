@@ -1,100 +1,142 @@
-var is_pretty = false;
-var old_value = '';
-var animation_speed = 250;
-var tab_space = '  ';
+/**
+ * JSONSH - JSON Syntax Highlight
+ * 
+ * @version v0.2.0 ( 4/20/2012 )
+ *
+ * @author <a href="http://www.peterschmalfeldt.com">Peter Schmalfeldt</a>
+ *
+ * @namespace jsonsh 
+ */
+var jsonsh = {
+	
+	/** Track whether we've done an initial reformatting */
+	is_pretty: false,
 
-/** Site Specific Code */
-jQuery(function()
-{
-	jQuery('textarea').attr('spellcheck', false);
+	/** Store old Source to compare if changes were made before formatting again */
+	old_value: '',
 
-	jQuery('input[placeholder], textarea[placeholder]').placeholder();
+	/** Single place to update how fast/slow the animations will take */
+	animation_speed: 250,
 
-	jQuery('.logo, .reset').click(function()
+	/** Single place to update how you want to manage the tabbing in your reformatting */
+	tab_space: '  ',
+	
+	/** Initialize JSONSH */
+	init: function()
 	{
-		reset_interface();
-
-		return false;
-	});
-
-	jQuery('#source').keyup(function()
-	{
-		/** Only process JSON if there is some, and it is not the same as before */
-		if(jQuery(this).val() != old_value)
+		/** Add Placeholder Text for browsers that do not support it */
+		jQuery('input[placeholder], textarea[placeholder]').placeholder();
+		
+		/** Allow logo and reset link to reset interface */
+		jQuery('.logo, .reset').click(function()
 		{
-			make_pretty();
+			jsonsh.reset_interface();
 
-			old_value = jQuery(this).val();
-		}
-		else if(jQuery(this).val() == '')
+			return false;
+		});
+		
+		/** Look for changes to JSON source */
+		jQuery('#source').keyup(function()
 		{
-			is_pretty = false;
-			jQuery('#result').fadeOut(animation_speed);
-		}
-	});
-});
-
-function make_pretty()
-{
-	/** Reset Interface */
-	jQuery('#output_wrapper').html('');
-
-	/** Try to Validate & Format Source */
-	if(jQuery('#source').val() != '')
-	{
-		try
-		{
-			var result = jsonlint.parse(jQuery('#source').val());
-
-			if(result)
+			/** Only process JSON if there is some, and it is not the same as before */
+			if(jQuery(this).val() != jsonsh.old_value)
 			{
-				jQuery('#output_wrapper').html('<pre class="prettyprint linenums"><code class="language-js">' + JSON.stringify(result, null, tab_space) + '</code></pre>');
+				/** Passed out initial tests, go ahead and make it pretty */
+				jsonsh.make_pretty();
+				
+				/** Update our old value to the latest and greatest */
+				jsonsh.old_value = jQuery(this).val();
+			}
+			/** Source is blank now, no need to do anything, so reset interface */
+			else if(jQuery(this).val() == '')
+			{
+				jsonsh.reset_interface();
+			}
+		});
+	},
+	
+	/**  */
+	make_pretty: function()
+	{
+		/** Clear out the old HTML from the output first */
+		jQuery('#output_wrapper').html('');
 
-				if(is_pretty === false)
+		/** Try to Validate & Format Source */
+		if(jQuery('#source').val() != '')
+		{
+			try
+			{
+				/** Parse JSON using Awesome JSON Lint */
+				var result = jsonlint.parse(jQuery('#source').val());
+				
+				/** Check for a result */
+				if(result)
 				{
-					jQuery('#source').val(JSON.stringify(result, null, tab_space)).scrollTop(0);
-
-					is_pretty = true;
+					/** Stick out decompresses JSON string into the output wrapper so we can make it all pretty */
+					jQuery('#output_wrapper').html('<pre class="prettyprint linenums"><code class="language-js">' + JSON.stringify(result, null, jsonsh.tab_space) + '</code></pre>');
+					
+					/** Check if we've already made the JSON pretty, if not let's also update the original source ( doing it again just makes the UX horrible ) */
+					if(jsonsh.is_pretty === false)
+					{
+						/** Update formatting of original source so user can copy / paste if they want */
+						jQuery('#source').val(JSON.stringify(result, null, jsonsh.tab_space)).scrollTop(0);
+						
+						/** Track that we updated the users JSON source formatting */
+						jsonsh.is_pretty = true;
+					}
+					
+					/** Get rid of any existing result messages */
+					jQuery('#result').fadeOut(jsonsh.animation_speed);
+					
+					/** Now that the heavy lifing is done, MAKE IT PRETTY */
+					prettyPrint();
+					
+					/** Allow the user to click to highlight a row to keep mental track of things better */
+					jQuery('li').click(function(){
+						jQuery(this).toggleClass('select');
+					});
+					
+					/** Bring up the reset link to allow user to get back to the begging ASAP */
+					jQuery('.reset').fadeIn(jsonsh.animation_speed);
 				}
-
-				jQuery('#result').fadeOut(animation_speed);
-
-				prettyPrint();
-
-				jQuery('li').click(function(){
-					jQuery(this).toggleClass('select');
-				});
-
-				jQuery('.reset').fadeIn(animation_speed);
+			}
+			/** Invalid Source */
+			catch(error)
+			{
+				/** Bring up the reset link to allow user to get back to the begging ASAP */
+				jQuery('.reset').fadeIn(jsonsh.animation_speed);
+				
+				/** Show the error message we got to the user so then know what's up */
+				jQuery('#result').addClass('fail').html(error.message).fadeIn();
 			}
 		}
-		/** Invalid Source */
-		catch(error)
+		/** Source code is blank now, so reset the interface */
+		else
 		{
-			jQuery('.reset').fadeIn(animation_speed);
-
-			jQuery('#result').addClass('fail').html(error.message).fadeIn();
+			jsonsh.reset_interface();
 		}
-	}
-	else
+	},
+	
+	/** Put everything back the way it was when we first started... easy peasy */
+	reset_interface: function()
 	{
-		is_pretty = false;
+		jQuery('#result').fadeOut(jsonsh.animation_speed);
+		jQuery('#source').val('');
+		jQuery('#output_wrapper').html('');
+		jQuery('.reset').fadeOut(jsonsh.animation_speed);
 
-		jQuery('#result').fadeOut(100);
+		jsonsh.is_pretty = false;
+		jsonsh.old_value = '';
 	}
-};
-
-function reset_interface()
-{
-	jQuery('#result').fadeOut(animation_speed);
-	jQuery('#source').val('');
-	jQuery('#output_wrapper').html('');
-
-	jQuery('.reset').fadeOut(animation_speed);
-
-	is_pretty = false;
-	old_value = '';
 }
+
+/** Initialize JSONSH */
+jQuery(function()
+{
+	jsonsh.init();	
+});
+
+/** --- THIRD PARTY LIBRARIES --- */
 
 /** JSON2 Third Party Plugin - https://github.com/zaach/jsonlint */
 if(!this.JSON){this.JSON={};}(function(){function f(n){return n < 10 ? '0'+n:n;}if(typeof Date.prototype.toJSON !== 'function'){Date.prototype.toJSON=function(key){return isFinite(this.valueOf())?this.getUTCFullYear()+'-'+f(this.getUTCMonth()+1)+'-'+f(this.getUTCDate())+'T'+f(this.getUTCHours())+':'+f(this.getUTCMinutes())+':'+f(this.getUTCSeconds())+'Z':null;};String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(key){return this.valueOf();};}var cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={'\b':'\\b','\t':'\\t','\n':'\\n','\f':'\\f','\r':'\\r','"':'\\"','\\':'\\\\'},rep;function quote(string){escapable.lastIndex=0;return escapable.test(string)?'"'+string.replace(escapable,function(a){var c=meta[a];return typeof c === 'string' ? c :'\\u'+('0000'+a.charCodeAt(0).toString(16)).slice(-4);})+'"':'"'+string+'"';}function str(key,holder){var i,k,v,length,mind=gap,partial,value=holder[key];if(value && typeof value==='object' && typeof value.toJSON==='function'){value=value.toJSON(key);}if(typeof rep==='function'){value=rep.call(holder,key,value);}switch(typeof value){case 'string':return quote(value);case 'number':return isFinite(value) ? String(value):'null';case 'boolean':case 'null':return String(value);case 'object':if(!value){return 'null';}gap += indent;partial=[];if(Object.prototype.toString.apply(value)==='[object Array]'){length=value.length;for(i=0;i<length;i+=1){partial[i]=str(i,value)||'null';}v=partial.length===0?'[]':gap?'[\n'+gap+partial.join(',\n'+gap)+'\n'+mind+']':'['+partial.join(',')+']';gap=mind;return v;}if(rep && typeof rep==='object'){length=rep.length;for(i=0;i<length;i+=1){k=rep[i];if(typeof k==='string'){v=str(k,value);if(v){partial.push(quote(k)+(gap ? ': ':':')+v);}}}}else{for(k in value){if(Object.hasOwnProperty.call(value,k)){v=str(k,value);if(v){partial.push(quote(k)+(gap ? ': ':':')+v);}}}}v=partial.length===0 ? '{}':gap ? '{\n'+gap+partial.join(',\n'+gap)+'\n'+mind+'}':'{'+partial.join(',')+'}';gap=mind;return v;}}if(typeof JSON.stringify!=='function'){JSON.stringify=function(value,replacer,space){var i;gap='';indent='';if(typeof space==='number'){for(i=0;i<space;i+=1){indent+=' ';}}else if(typeof space==='string'){indent=space;}rep=replacer;if(replacer && typeof replacer!=='function' && (typeof replacer!=='object' || typeof replacer.length!=='number')){throw new Error('JSON.stringify');}return str('',{'':value});};}if(typeof JSON.parse!=='function'){JSON.parse=function(text,reviver){var j;function walk(holder,key){var k,v,value=holder[key];if(value && typeof value === 'object'){for(k in value){if(Object.hasOwnProperty.call(value,k)){v=walk(value,k);if(v!==undefined){value[k]=v;}else{delete value[k];}}}}return reviver.call(holder, key, value);}cx.lastIndex=0;if(cx.test(text)){text=text.replace(cx,function(a){return '\\u'+('0000'+a.charCodeAt(0).toString(16)).slice(-4);});}if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,'@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,']').replace(/(?:^|:|,)(?:\s*\[)+/g,''))){j=eval('('+text+')');return typeof reviver==='function'?walk({'': j},''):j;}throw new SyntaxError('JSON.parse');};}}());
