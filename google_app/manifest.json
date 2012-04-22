@@ -1,0 +1,16 @@
+{
+  "name": "JSON SH",
+  "description": "JSON Syntax Highlighting & Formater",
+  "version": "0.5",
+  "app": {
+    "urls": [
+      "http://jsonsh.com/"
+    ],
+    "launch": {
+      "web_url": "http://jsonsh.com/?ga=1"
+    }
+  },
+  "icons": {
+    "128": "icon_128.png"
+  }
+}

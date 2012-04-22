@@ -28,8 +28,8 @@ h1
 	font-size: 72px;
 	margin: 0;
 	padding: 0;
-	width: 161px;
-	height: 85px;
+	width: 127px;
+	height: 68px;
 	background: url('../img/logo.png') top left no-repeat;
 	text-indent: -1999px;
 	overflow: hidden;
@@ -101,7 +101,7 @@ h1 span
 {
 	position: absolute;
 	right: 20px;
-	top: 90px;
+	top: 75px;
 	color: #f05e07;
 	text-decoration: none;
 	display: none;
