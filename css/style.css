@@ -1,0 +1,227 @@
+:focus
+{
+    outline: 0;
+    outline: none;
+}
+::selection,
+::-moz-selection,
+::-webkit-selection,
+textarea::selection,
+textarea::-moz-selection,
+textarea::-webkit-selection
+{
+	background-color: #111 !important;
+	color: #f05e07 !important;
+}
+html, body
+{
+	background-color: #222;
+}
+body
+{
+	font-family: 'Anonymous Pro', sans-serif;
+	background-color: #222;
+}
+h1
+{
+	color: #f05e07;
+	font-size: 72px;
+	margin: 0;
+	padding: 0;
+	width: 161px;
+	height: 85px;
+	background: url('../img/logo.png') top left no-repeat;
+	text-indent: -1999px;
+	overflow: hidden;
+	cursor: pointer;
+}
+h1 span
+{
+	display: block;
+	font-size: 14px;
+	color: #999;
+	margin: 0;
+	padding: 0;
+	margin-bottom: 20px;
+}
+#wrapper
+{
+	padding: 25px;
+	height: 100%;
+	width: 960px;
+	margin: 0 auto;
+	position: relative;
+}
+#source
+{
+	width: 918px;
+	height: 100px;
+	display: block;
+	background-color: #222;
+	color: #777;
+	border: 2px solid #272727;
+	padding: 20px;
+	resize: vertical;
+	outline: none;
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 12px;
+	line-height: 20px;
+	background-color: #111;
+	margin-top: 10px;
+}
+#result
+{
+	padding: 1em;
+	display: none;
+	font-family: 'Anonymous Pro', sans-serif !important;
+	font-size: 12px;
+	margin-top: 10px;
+	line-height: 20px;
+}
+.fail
+{
+	background-color: #f0dcd0;
+	color: #f05e07;
+	border: 1px solid #f05e07;
+}
+.fork
+{
+	position: absolute;
+	right: 25px;
+	top: 30px;
+	z-index: 100;
+	color: #999;
+	text-decoration: none;
+}
+.fork:hover
+{
+	color: #f05e07;
+}
+.reset
+{
+	position: absolute;
+	right: 20px;
+	top: 100px;
+	z-index: 100;
+	color: #f05e07;
+	text-decoration: none;
+	display: none;
+}
+#output
+{
+	height: 500px;
+	display: block;
+	font-family: 'Anonymous Pro', sans-serif !important;
+	font-size: 12px;
+}
+
+/* Syntax Highlighter Styles */
+.pln
+{
+	color: #000;
+}
+@media screen
+{
+	.str
+	{
+		color: #BBB;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.kwd
+	{
+		color: #6f9ac5;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.com
+	{
+		color: #800;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.typ
+	{
+		color: #606;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.lit
+	{
+		color: #6fc5bc;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.pun, .opn, .clo
+	{
+		color: #f09158;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.tag
+	{
+		color: #008;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.atn
+	{
+		color: #606;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.atv
+	{
+		color: #080;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.dec,.var
+	{
+		color: #606;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+	.fun
+	{
+		color: red;
+		font-family: 'Anonymous Pro', sans-serif;
+		font-size: 12px;
+	}
+}
+pre.prettyprint
+{
+	padding: 2px;
+	border: none;
+	background-color: #222;
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 12px;
+	overflow: auto;
+}
+ol.linenums
+{
+	margin-top: 0;
+	margin-bottom: 0;
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 12px;
+}
+li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
+{
+    color: #333;
+    list-style-type: decimal;
+	line-height: 20px;
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 12px;
+}
+li.L1,li.L3,li.L5,li.L7,li.L9
+{
+	background-color: #272727;
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 12px;
+}
+li:hover, li.select
+{
+	background-color: #111;
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 12px;
+}
