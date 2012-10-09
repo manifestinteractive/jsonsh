@@ -48,13 +48,12 @@ h1 span
 {
 	padding: 25px;
 	height: 100%;
-	width: 960px;
 	margin: 0 auto;
 	position: relative;
 }
 #source
 {
-	width: 918px;
+	width: 98%;
 	height: 100px;
 	display: block;
 	background-color: #222;
@@ -66,6 +65,19 @@ h1 span
 	font-family: 'Anonymous Pro', sans-serif;
 	font-size: 12px;
 	line-height: 20px;
+	background-color: #111;
+	margin-top: 10px;
+}
+#url
+{
+	width: 98%;
+	display: block;
+	background-color: #222;
+	color: #777;
+	border: 2px solid #272727;
+	padding: 20px;
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 12px;
 	background-color: #111;
 	margin-top: 10px;
 }

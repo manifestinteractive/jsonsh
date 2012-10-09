@@ -15,6 +15,9 @@ var jsonsh = {
 	/** Store old Source to compare if changes were made before formatting again */
 	old_value: '',
 
+    /** Store old api url to compare if changes were made before formatting again */
+	old_url: '',
+
 	/** Single place to update how fast/slow the animations will take */
 	animation_speed: 250,
 
@@ -53,21 +56,57 @@ var jsonsh = {
 				jsonsh.reset_interface();
 			}
 		});
+
+
+		jQuery('#url').keyup(function()
+		{
+			/** Only process JSON if there is some, and it is not the same as before */
+			var _this=this;
+			if(jQuery(this).val() != jsonsh.old_url)
+			{
+
+				//retrieve API response
+				jQuery.ajax({
+				  url: jQuery(this).val(),
+				  dataType: 'jsonp',
+				  success: function(response){
+
+				  	/** Passed out initial tests, go ahead and make it pretty */
+					jsonsh.make_pretty(JSON.stringify(response));
+					
+					/** Update our old value to the latest and greatest */
+					jsonsh.old_url = jQuery(_this).val();
+
+				  }
+				});
+
+			}
+			/** Source is blank now, no need to do anything, so reset interface */
+			else if(jQuery(this).val() == '')
+			{
+				jsonsh.reset_interface();
+			}
+		});
+
 	},
 	
 	/**  */
-	make_pretty: function()
+	make_pretty: function(json)
 	{
 		/** Clear out the old HTML from the output first */
 		jQuery('#output_wrapper').html('');
 
 		/** Try to Validate & Format Source */
-		if(jQuery('#source').val() != '')
+		if(jQuery('#source').val() != '' || json != '')
 		{
+
 			try
 			{
 				/** Parse JSON using Awesome JSON Lint */
-				var result = jsonlint.parse(jQuery('#source').val());
+				if(json!='')
+					var result = jsonlint.parse(json);
+				else
+					var result = jsonlint.parse(jQuery('#source').val());
 				
 				/** Check for a result */
 				if(result)
