@@ -160,6 +160,7 @@ var jsonsh = {
 	reset_interface: function()
 	{
 		jQuery('#result').fadeOut(jsonsh.animation_speed);
+		jQuery('#url').val('');
 		jQuery('#source').val('');
 		jQuery('#output_wrapper').html('');
 		jQuery('.reset').fadeOut(jsonsh.animation_speed);
