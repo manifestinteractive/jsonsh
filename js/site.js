@@ -133,6 +133,29 @@ var jsonsh = {
 					/** Allow the user to click to highlight a row to keep mental track of things better */
 					jQuery('li').click(function(){
 						jQuery(this).toggleClass('select');
+						
+						//For code folding
+						var startLen = $(this).find('span.pln').first().html().length,
+						next = $(this).next('li'),
+						nextLen = next.find('span.pln').first().html().length;
+						
+						function getNext(oldNext){
+							next = $(oldNext).next('li');
+							nextLen = next.find('span.pln').first().html().length;
+						}
+						
+						if(next.is(":visible")){
+							while(startLen < nextLen){
+								next.hide();
+								getNext(next);
+							}
+						}else{
+							while(!next.is(":visible")){
+								next.show();
+								getNext(next);
+							}
+						}
+						
 					});
 					
 					/** Bring up the reset link to allow user to get back to the begging ASAP */
