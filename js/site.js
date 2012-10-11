@@ -15,6 +15,9 @@ var jsonsh = {
 	/** Store old Source to compare if changes were made before formatting again */
 	old_value: '',
 
+    /** Store old api url to compare if changes were made before formatting again */
+	old_url: '',
+
 	/** Single place to update how fast/slow the animations will take */
 	animation_speed: 250,
 
@@ -53,21 +56,57 @@ var jsonsh = {
 				jsonsh.reset_interface();
 			}
 		});
+
+
+		jQuery('#url').keyup(function()
+		{
+			/** Only process JSON if there is some, and it is not the same as before */
+			var _this=this;
+			if(jQuery(this).val() != jsonsh.old_url)
+			{
+
+				//retrieve API response
+				jQuery.ajax({
+				  url: jQuery(this).val(),
+				  dataType: 'jsonp',
+				  success: function(response){
+
+				  	/** Passed out initial tests, go ahead and make it pretty */
+					jsonsh.make_pretty(JSON.stringify(response));
+					
+					/** Update our old value to the latest and greatest */
+					jsonsh.old_url = jQuery(_this).val();
+
+				  }
+				});
+
+			}
+			/** Source is blank now, no need to do anything, so reset interface */
+			else if(jQuery(this).val() == '')
+			{
+				jsonsh.reset_interface();
+			}
+		});
+
 	},
 	
 	/**  */
-	make_pretty: function()
+	make_pretty: function(json)
 	{
 		/** Clear out the old HTML from the output first */
 		jQuery('#output_wrapper').html('');
 
 		/** Try to Validate & Format Source */
-		if(jQuery('#source').val() != '')
+		if(jQuery('#source').val() != '' || json != '')
 		{
+
 			try
 			{
 				/** Parse JSON using Awesome JSON Lint */
-				var result = jsonlint.parse(jQuery('#source').val());
+				if(typeof json != 'undefined')
+					var result = jsonlint.parse(json);
+				else
+					var result = jsonlint.parse(jQuery('#source').val());
 				
 				/** Check for a result */
 				if(result)
@@ -94,6 +133,29 @@ var jsonsh = {
 					/** Allow the user to click to highlight a row to keep mental track of things better */
 					jQuery('li').click(function(){
 						jQuery(this).toggleClass('select');
+						
+						//For code folding
+						var startLen = $(this).find('span.pln').first().html().length,
+						next = $(this).next('li'),
+						nextLen = next.find('span.pln').first().html().length;
+						
+						function getNext(oldNext){
+							next = $(oldNext).next('li');
+							nextLen = next.find('span.pln').first().html().length;
+						}
+						
+						if(next.is(":visible")){
+							while(startLen < nextLen){
+								next.hide();
+								getNext(next);
+							}
+						}else{
+							while(!next.is(":visible")){
+								next.show();
+								getNext(next);
+							}
+						}
+						
 					});
 					
 					/** Bring up the reset link to allow user to get back to the begging ASAP */
@@ -121,12 +183,14 @@ var jsonsh = {
 	reset_interface: function()
 	{
 		jQuery('#result').fadeOut(jsonsh.animation_speed);
+		jQuery('#url').val('');
 		jQuery('#source').val('');
 		jQuery('#output_wrapper').html('');
 		jQuery('.reset').fadeOut(jsonsh.animation_speed);
 
 		jsonsh.is_pretty = false;
 		jsonsh.old_value = '';
+		jsonsh.old_url = '';		
 	}
 }
 
