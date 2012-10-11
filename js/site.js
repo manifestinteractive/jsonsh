@@ -103,7 +103,7 @@ var jsonsh = {
 			try
 			{
 				/** Parse JSON using Awesome JSON Lint */
-				if(json!='')
+				if(typeof json != 'undefined')
 					var result = jsonlint.parse(json);
 				else
 					var result = jsonlint.parse(jQuery('#source').val());
@@ -167,6 +167,7 @@ var jsonsh = {
 
 		jsonsh.is_pretty = false;
 		jsonsh.old_value = '';
+		jsonsh.old_url = '';		
 	}
 }
 
