@@ -15,3 +15,5 @@ Use the following sample of some compressed JSON to get an idea of what your out
 To improve your productivity, now you can get the compressed JSON from a service. 
 
 Try to put an Api url in the input text!
+
+[![Buy Me Coffee](https://peterschmalfeldt.com/buy-me-coffee.png)](https://www.paypal.me/manifestinteractive)
